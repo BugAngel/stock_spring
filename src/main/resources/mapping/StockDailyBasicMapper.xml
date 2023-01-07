@@ -7,6 +7,11 @@
     <result column="symbol" property="symbol" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="industry" property="industry" jdbcType="VARCHAR" />
+    <result column="open" property="open" jdbcType="DECIMAL" />
+    <result column="high" property="high" jdbcType="DECIMAL" />
+    <result column="low" property="low" jdbcType="DECIMAL" />
+    <result column="close" property="close" jdbcType="DECIMAL" />
+    <result column="vol" property="vol" jdbcType="DECIMAL" />
     <result column="amount" property="amount" jdbcType="DECIMAL" />
   </resultMap>
   <select id="selectStartStarStock" resultMap="BaseResultMap" >
@@ -15,6 +20,11 @@
            basic.symbol,
            basic.name,
            basic.industry,
+           third.open,
+           third.high,
+           third.low,
+           third.close,
+           third.vol,
            third.amount
     FROM (
            -- 第一天  大阴线
@@ -45,6 +55,8 @@
            close,
            vol,
            amount,
+           high,
+           low,
            trade_date
       FROM daily
      WHERE trade_date = #{thirdDate,jdbcType=VARCHAR}
