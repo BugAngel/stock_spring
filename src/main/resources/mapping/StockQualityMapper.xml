@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.example.dao.StockQualityMapper" >
+  <resultMap id="BaseResultMap" type="org.example.bean.StockQuality" >
+    <result column="trade_date" property="tradeDate" jdbcType="VARCHAR" />
+    <result column="ts_code" property="tsCode" jdbcType="VARCHAR" />
+    <result column="close" property="close" jdbcType="DECIMAL" />
+    <result column="next_day_close" property="next_day_close" jdbcType="DECIMAL" />
+    <result column="next_2day_close" property="next_2day_close" jdbcType="DECIMAL" />
+    <result column="next_5day_close" property="next_5day_close" jdbcType="DECIMAL" />
+    <result column="next_10day_close" property="next_10day_close" jdbcType="DECIMAL" />
+    <result column="next_20day_close" property="next_20day_close" jdbcType="DECIMAL" />
+  </resultMap>
+  <select id="selectStockQuality" resultMap="BaseResultMap" >
+      SELECT
+      a.trade_date,
+      a.ts_code,
+      a.close,
+      b.close AS next_day_close,
+      c.close AS next_2day_close,
+      d.close AS next_5day_close,
+      e.close AS next_10day_close,
+      f.close AS next_20day_close
+      FROM (
+      SELECT
+      trade_date,
+      close,
+      ts_code
+      FROM daily
+      WHERE
+      trade_date = #{tradeDay,jdbcType=VARCHAR}
+      AND ts_code = #{tsCode,jdbcType=VARCHAR}
+      ) AS a
+      JOIN (
+      SELECT close, ts_code
+      FROM daily
+      WHERE
+      trade_date = #{nextDay,jdbcType=VARCHAR}
+      AND ts_code = #{tsCode,jdbcType=VARCHAR}
+      ) AS b ON a.ts_code = b.ts_code
+      JOIN (
+      SELECT close, ts_code
+      FROM daily
+      WHERE
+      trade_date = #{next2Day,jdbcType=VARCHAR}
+      AND ts_code = #{tsCode,jdbcType=VARCHAR}
+      ) AS c ON a.ts_code = c.ts_code
+      JOIN (
+      SELECT close, ts_code
+      FROM daily
+      WHERE
+      trade_date = #{next5Day,jdbcType=VARCHAR}
+      AND ts_code = #{tsCode,jdbcType=VARCHAR}
+      ) AS d ON a.ts_code = d.ts_code
+      JOIN (
+      SELECT close, ts_code
+      FROM daily
+      WHERE
+      trade_date = #{next10Day,jdbcType=VARCHAR}
+      AND ts_code = #{tsCode,jdbcType=VARCHAR}
+      ) AS e ON a.ts_code = e.ts_code
+      JOIN (
+      SELECT close, ts_code
+      FROM daily
+      WHERE
+      trade_date = #{next20Day,jdbcType=VARCHAR}
+      AND ts_code = #{tsCode,jdbcType=VARCHAR}
+      ) AS f ON a.ts_code = f.ts_code
+  </select>
+</mapper>
