@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.example.dao.StockDailyBasicMapper" >
+  <resultMap id="BaseResultMap" type="org.example.bean.StockDailyBasic" >
+    <result column="trade_date" property="tradeDate" jdbcType="VARCHAR" />
+    <result column="ts_code" property="tsCode" jdbcType="VARCHAR" />
+    <result column="symbol" property="symbol" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="industry" property="industry" jdbcType="VARCHAR" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+  </resultMap>
+  <select id="selectStartStarStock" resultMap="BaseResultMap" >
+    SELECT third.trade_date,
+           first.ts_code,
+           basic.symbol,
+           basic.name,
+           basic.industry,
+           third.amount
+    FROM (
+           -- 第一天  大阴线
+    SELECT ts_code,
+           close,
+           low,
+           vol
+           FROM daily
+           WHERE
+           trade_date = #{firstDate,jdbcType=VARCHAR}
+           AND open > close
+           AND (open - close) / (high - low) > #{firstThreshold,jdbcType=DOUBLE}
+         ) AS first
+    JOIN (
+    -- 第二天 实体较小,跳空开盘,收盘价小于昨天收盘价
+    SELECT ts_code,
+           open,
+           close,
+           vol
+           FROM daily
+           WHERE
+           trade_date = #{secondDate,jdbcType=VARCHAR}
+           ) AS second ON first.ts_code = second.ts_code
+    JOIN (
+    -- 第三天 大阳线,收盘价大于第一天收盘价
+    SELECT ts_code,
+           open,
+           close,
+           vol,
+           amount,
+           trade_date
+      FROM daily
+     WHERE trade_date = #{thirdDate,jdbcType=VARCHAR}
+       AND (close - open) / (high - low) > #{thirdThreshold,jdbcType=DOUBLE}
+           ) AS third
+      ON first.ts_code = third.ts_code
+    JOIN (
+    SELECT ts_code,
+           symbol,
+           name,
+           industry
+      FROM stock_basic
+     WHERE market = '主板'
+     ) AS basic
+      ON first.ts_code = basic.ts_code
+    WHERE second.open &lt; first.low
+      AND second.close &lt; first.close
+      AND third.close &gt; first.close
+      AND third.vol &gt; second.vol
+      AND third.vol &gt; first.vol
+    ORDER BY third.amount DESC
+  </select>
+</mapper>

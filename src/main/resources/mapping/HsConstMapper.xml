@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.example.dao.HsConstMapper" >
+  <resultMap id="BaseResultMap" type="org.example.entity.HsConst" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="ts_code" property="tsCode" jdbcType="VARCHAR" />
+    <result column="hs_type" property="hsType" jdbcType="VARCHAR" />
+    <result column="in_date" property="inDate" jdbcType="VARCHAR" />
+    <result column="out_date" property="outDate" jdbcType="VARCHAR" />
+    <result column="is_new" property="isNew" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from hs_const
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="org.example.entity.HsConst" >
+    insert into hs_const (id, ts_code, hs_type, 
+      in_date, out_date, is_new
+      )
+    values (#{id,jdbcType=INTEGER}, #{tsCode,jdbcType=VARCHAR}, #{hsType,jdbcType=VARCHAR}, 
+      #{inDate,jdbcType=VARCHAR}, #{outDate,jdbcType=VARCHAR}, #{isNew,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="org.example.entity.HsConst" >
+    update hs_const
+    set ts_code = #{tsCode,jdbcType=VARCHAR},
+      hs_type = #{hsType,jdbcType=VARCHAR},
+      in_date = #{inDate,jdbcType=VARCHAR},
+      out_date = #{outDate,jdbcType=VARCHAR},
+      is_new = #{isNew,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select id, ts_code, hs_type, in_date, out_date, is_new
+    from hs_const
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, ts_code, hs_type, in_date, out_date, is_new
+    from hs_const
+  </select>
+</mapper>

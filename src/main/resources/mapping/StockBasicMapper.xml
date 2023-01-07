@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.example.dao.StockBasicMapper" >
+  <resultMap id="BaseResultMap" type="org.example.entity.StockBasic" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="ts_code" property="tsCode" jdbcType="VARCHAR" />
+    <result column="symbol" property="symbol" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="area" property="area" jdbcType="VARCHAR" />
+    <result column="industry" property="industry" jdbcType="VARCHAR" />
+    <result column="fullname" property="fullname" jdbcType="VARCHAR" />
+    <result column="enname" property="enname" jdbcType="VARCHAR" />
+    <result column="cnspell" property="cnspell" jdbcType="VARCHAR" />
+    <result column="market" property="market" jdbcType="VARCHAR" />
+    <result column="exchange" property="exchange" jdbcType="VARCHAR" />
+    <result column="curr_type" property="currType" jdbcType="VARCHAR" />
+    <result column="list_status" property="listStatus" jdbcType="VARCHAR" />
+    <result column="list_date" property="listDate" jdbcType="VARCHAR" />
+    <result column="delist_date" property="delistDate" jdbcType="VARCHAR" />
+    <result column="is_hs" property="isHs" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from stock_basic
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="org.example.entity.StockBasic" >
+    insert into stock_basic (id, ts_code, symbol, 
+      `name`, area, industry, 
+      fullname, enname, cnspell, 
+      market, exchange, curr_type, 
+      list_status, list_date, delist_date, 
+      is_hs)
+    values (#{id,jdbcType=INTEGER}, #{tsCode,jdbcType=VARCHAR}, #{symbol,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{industry,jdbcType=VARCHAR}, 
+      #{fullname,jdbcType=VARCHAR}, #{enname,jdbcType=VARCHAR}, #{cnspell,jdbcType=VARCHAR}, 
+      #{market,jdbcType=VARCHAR}, #{exchange,jdbcType=VARCHAR}, #{currType,jdbcType=VARCHAR}, 
+      #{listStatus,jdbcType=VARCHAR}, #{listDate,jdbcType=VARCHAR}, #{delistDate,jdbcType=VARCHAR}, 
+      #{isHs,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="org.example.entity.StockBasic" >
+    update stock_basic
+    set ts_code = #{tsCode,jdbcType=VARCHAR},
+      symbol = #{symbol,jdbcType=VARCHAR},
+      `name` = #{name,jdbcType=VARCHAR},
+      area = #{area,jdbcType=VARCHAR},
+      industry = #{industry,jdbcType=VARCHAR},
+      fullname = #{fullname,jdbcType=VARCHAR},
+      enname = #{enname,jdbcType=VARCHAR},
+      cnspell = #{cnspell,jdbcType=VARCHAR},
+      market = #{market,jdbcType=VARCHAR},
+      exchange = #{exchange,jdbcType=VARCHAR},
+      curr_type = #{currType,jdbcType=VARCHAR},
+      list_status = #{listStatus,jdbcType=VARCHAR},
+      list_date = #{listDate,jdbcType=VARCHAR},
+      delist_date = #{delistDate,jdbcType=VARCHAR},
+      is_hs = #{isHs,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select id, ts_code, symbol, `name`, area, industry, fullname, enname, cnspell, market, 
+    exchange, curr_type, list_status, list_date, delist_date, is_hs
+    from stock_basic
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, ts_code, symbol, `name`, area, industry, fullname, enname, cnspell, market, 
+    exchange, curr_type, list_status, list_date, delist_date, is_hs
+    from stock_basic
+  </select>
+</mapper>

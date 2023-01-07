@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.example.dao.TradeCalMapper" >
+  <resultMap id="BaseResultMap" type="org.example.entity.TradeCal" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="exchange" property="exchange" jdbcType="VARCHAR" />
+    <result column="cal_date" property="calDate" jdbcType="VARCHAR" />
+    <result column="is_open" property="isOpen" jdbcType="VARCHAR" />
+    <result column="pretrade_date" property="pretradeDate" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from trade_cal
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="org.example.entity.TradeCal" >
+    insert into trade_cal (id, exchange, cal_date, 
+      is_open, pretrade_date)
+    values (#{id,jdbcType=INTEGER}, #{exchange,jdbcType=VARCHAR}, #{calDate,jdbcType=VARCHAR}, 
+      #{isOpen,jdbcType=VARCHAR}, #{pretradeDate,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="org.example.entity.TradeCal" >
+    update trade_cal
+    set exchange = #{exchange,jdbcType=VARCHAR},
+      cal_date = #{calDate,jdbcType=VARCHAR},
+      is_open = #{isOpen,jdbcType=VARCHAR},
+      pretrade_date = #{pretradeDate,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select id, exchange, cal_date, is_open, pretrade_date
+    from trade_cal
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, exchange, cal_date, is_open, pretrade_date
+    from trade_cal
+  </select>
+  <select id="selectOpenAll" resultMap="BaseResultMap" >
+    select id, exchange, cal_date, is_open, pretrade_date
+    from trade_cal
+    where is_open = 1
+    order by cal_date asc
+  </select>
+</mapper>
