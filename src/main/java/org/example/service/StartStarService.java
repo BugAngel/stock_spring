@@ -4,7 +4,8 @@ import com.github.pagehelper.PageInfo;
 import org.example.bean.StartStarInfo;
 
 public interface StartStarService {
-    PageInfo<StartStarInfo> list(String date,
+    PageInfo<StartStarInfo> list(Integer beginDate,
+                                 Integer endDate,
                                  Double firstThreshold,
                                  Double thirdThreshold,
                                  Integer pageNum,

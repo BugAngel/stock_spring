@@ -18,13 +18,14 @@ public class StartStarController {
     private StartStarService startStarService;
 
     @GetMapping("/list")
-    public JsonResult<PageInfo<StartStarInfo>> list(@RequestParam(value = "date") String date,
+    public JsonResult<PageInfo<StartStarInfo>> list(@RequestParam(value = "begin") Integer beginDate,
+                                                    @RequestParam(value = "end") Integer endDate,
                                                     @RequestParam(value = "firstThreshold", defaultValue = "0.5") Double firstThreshold,
                                                     @RequestParam(value = "thirdThreshold", defaultValue = "0.6") Double thirdThreshold,
                                                     @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
                                                     @RequestParam(value = "pageSize", defaultValue = "100") Integer pageSize) {
         try {
-            return new JsonResult<>(ReturnCode.SUC, startStarService.list(date, firstThreshold, thirdThreshold, pageNum, pageSize), "获取列表成功");
+            return new JsonResult<>(ReturnCode.SUC, startStarService.list(beginDate,endDate, firstThreshold, thirdThreshold, pageNum, pageSize), "获取列表成功");
         } catch (Exception e) {
             return new JsonResult<>(ReturnCode.FAIL, e.getLocalizedMessage());
         }
