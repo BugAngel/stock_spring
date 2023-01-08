@@ -31,35 +31,35 @@
       trade_date = #{tradeDay,jdbcType=VARCHAR}
       AND ts_code = #{tsCode,jdbcType=VARCHAR}
       ) AS a
-      JOIN (
+      LEFT JOIN (
       SELECT close, ts_code
       FROM daily
       WHERE
       trade_date = #{nextDay,jdbcType=VARCHAR}
       AND ts_code = #{tsCode,jdbcType=VARCHAR}
       ) AS b ON a.ts_code = b.ts_code
-      JOIN (
+      LEFT JOIN (
       SELECT close, ts_code
       FROM daily
       WHERE
       trade_date = #{next2Day,jdbcType=VARCHAR}
       AND ts_code = #{tsCode,jdbcType=VARCHAR}
       ) AS c ON a.ts_code = c.ts_code
-      JOIN (
+      LEFT JOIN (
       SELECT close, ts_code
       FROM daily
       WHERE
       trade_date = #{next5Day,jdbcType=VARCHAR}
       AND ts_code = #{tsCode,jdbcType=VARCHAR}
       ) AS d ON a.ts_code = d.ts_code
-      JOIN (
+      LEFT JOIN (
       SELECT close, ts_code
       FROM daily
       WHERE
       trade_date = #{next10Day,jdbcType=VARCHAR}
       AND ts_code = #{tsCode,jdbcType=VARCHAR}
       ) AS e ON a.ts_code = e.ts_code
-      JOIN (
+      LEFT JOIN (
       SELECT close, ts_code
       FROM daily
       WHERE
