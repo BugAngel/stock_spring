@@ -15,11 +15,11 @@ public class TradeDaysServiceImpl implements TradeDaysService {
     private TradeCalMapper tradeCalMapper;
 
     @Override
-    public List<String> getTradeDays(){
+    public List<Integer> getTradeDays() {
         List<TradeCal> tradeCals = tradeCalMapper.selectOpenAll();
-        List<String> res = new ArrayList<>();
-        for(TradeCal tradeCal:tradeCals){
-            res.add(tradeCal.getCalDate());
+        List<Integer> res = new ArrayList<>();
+        for (TradeCal tradeCal : tradeCals) {
+            res.add(Integer.valueOf(tradeCal.getCalDate()));
         }
         return res;
     }
