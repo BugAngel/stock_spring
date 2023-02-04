@@ -14,8 +14,8 @@ public class StartRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println(">>>服务启动第一个开始执行的任务: 初始化 TradeDays<<<<");
+        System.out.println(">>> The service start the first task: initialization TradeDays <<<<");
         Constant.TRADE_DAYS = tradeDaysService.getTradeDays();
-        System.out.println(">>>服务启动第一个开始执行的任务: 初始化 TradeDays 完成<<<<");
+        System.out.println(">>> The service complete the first task: initialization TradeDays <<<<");
     }
 }

@@ -11,4 +11,8 @@ public interface StockDailyBasicMapper {
                                                @Param("thirdDate") String thirdDate,
                                                @Param("firstThreshold") Double firstThreshold,
                                                @Param("thirdThreshold") Double thirdThreshold);
+
+    List<StockDailyBasic> selectPreStartStarStock(@Param("firstDate") String firstDate,
+                                                  @Param("secondDate") String secondDate,
+                                                  @Param("firstThreshold") Double firstThreshold);
 }

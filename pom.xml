@@ -77,6 +77,8 @@
                 <executions>
                     <execution>
                         <id>Generate MyBatis Artifacts</id>
+                        <!--设置生命周期,打包不生效-->
+                        <phase>deploy</phase>
                         <goals>
                             <goal>generate</goal>
                         </goals>

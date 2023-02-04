@@ -1,6 +1,5 @@
 package org.example.controller;
 
-import com.github.pagehelper.PageInfo;
 import org.example.bean.JsonResult;
 import org.example.bean.ReturnCode;
 import org.example.bean.StartStarInfo;
@@ -11,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/start_star")
 public class StartStarController {
@@ -18,14 +19,23 @@ public class StartStarController {
     private StartStarService startStarService;
 
     @GetMapping("/list")
-    public JsonResult<PageInfo<StartStarInfo>> list(@RequestParam(value = "begin") Integer beginDate,
-                                                    @RequestParam(value = "end") Integer endDate,
-                                                    @RequestParam(value = "firstThreshold", defaultValue = "0.5") Double firstThreshold,
-                                                    @RequestParam(value = "thirdThreshold", defaultValue = "0.6") Double thirdThreshold,
-                                                    @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
-                                                    @RequestParam(value = "pageSize", defaultValue = "100") Integer pageSize) {
+    public JsonResult<List<StartStarInfo>> list(@RequestParam(value = "begin") Integer beginDate,
+                                                @RequestParam(value = "end") Integer endDate,
+                                                @RequestParam(value = "firstThreshold", defaultValue = "0.5") Double firstThreshold,
+                                                @RequestParam(value = "thirdThreshold", defaultValue = "0.6") Double thirdThreshold) {
         try {
-            return new JsonResult<>(ReturnCode.SUC, startStarService.list(beginDate,endDate, firstThreshold, thirdThreshold, pageNum, pageSize), "获取列表成功");
+            return new JsonResult<>(ReturnCode.SUC, startStarService.list(beginDate, endDate, firstThreshold, thirdThreshold), "获取列表成功");
+        } catch (Exception e) {
+            return new JsonResult<>(ReturnCode.FAIL, e.getLocalizedMessage());
+        }
+    }
+
+    @GetMapping("/pre_list")
+    public JsonResult<List<StartStarInfo>> preList(@RequestParam(value = "begin") Integer beginDate,
+                                                   @RequestParam(value = "end") Integer endDate,
+                                                   @RequestParam(value = "firstThreshold", defaultValue = "0.5") Double firstThreshold) {
+        try {
+            return new JsonResult<>(ReturnCode.SUC, startStarService.preList(beginDate, endDate, firstThreshold), "获取列表成功");
         } catch (Exception e) {
             return new JsonResult<>(ReturnCode.FAIL, e.getLocalizedMessage());
         }
