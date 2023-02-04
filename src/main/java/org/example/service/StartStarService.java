@@ -1,13 +1,12 @@
 package org.example.service;
 
-import com.github.pagehelper.PageInfo;
 import org.example.bean.StartStarInfo;
 
+import java.util.List;
+
 public interface StartStarService {
-    PageInfo<StartStarInfo> list(Integer beginDate,
-                                 Integer endDate,
-                                 Double firstThreshold,
-                                 Double thirdThreshold,
-                                 Integer pageNum,
-                                 Integer pageSize);
+    List<StartStarInfo> list(Integer beginDate,
+                             Integer endDate,
+                             Double firstThreshold,
+                             Double thirdThreshold);
 }

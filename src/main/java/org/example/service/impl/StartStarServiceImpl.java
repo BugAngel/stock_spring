@@ -1,7 +1,5 @@
 package org.example.service.impl;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import org.example.Constant;
 import org.example.bean.StartStarInfo;
 import org.example.bean.StockDailyBasic;
@@ -14,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -25,13 +22,10 @@ public class StartStarServiceImpl implements StartStarService {
     private StockQualityMapper stockQualityMapper;
 
     @Override
-    public PageInfo<StartStarInfo> list(Integer beginDate,
-                                        Integer endDate,
-                                        Double firstThreshold,
-                                        Double thirdThreshold,
-                                        Integer pageNum,
-                                        Integer pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
+    public List<StartStarInfo> list(Integer beginDate,
+                                    Integer endDate,
+                                    Double firstThreshold,
+                                    Double thirdThreshold) {
         List<StartStarInfo> startStarInfos = new ArrayList<>();
         int begin = AlgorithmUtil.binarySearch(Constant.TRADE_DAYS, beginDate);
         int end = AlgorithmUtil.binarySearch(Constant.TRADE_DAYS, endDate);
@@ -54,6 +48,6 @@ public class StartStarServiceImpl implements StartStarService {
                 startStarInfos.add(startStarInfo);
             }
         }
-        return new PageInfo<>(startStarInfos);
+        return startStarInfos;
     }
 }
