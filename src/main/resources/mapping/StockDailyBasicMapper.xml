@@ -79,4 +79,56 @@
       AND third.vol &gt; first.vol
     ORDER BY third.amount DESC
   </select>
+
+    <select id="selectPreStartStarStock" resultMap="BaseResultMap" >
+        SELECT second.trade_date,
+        first.ts_code,
+        basic.symbol,
+        basic.name,
+        basic.industry,
+        second.open,
+        second.high,
+        second.low,
+        second.close,
+        second.vol,
+        second.amount
+        FROM (
+        -- 第一天  大阴线
+        SELECT ts_code,
+        close,
+        low,
+        vol
+        FROM daily
+        WHERE
+        trade_date = #{firstDate,jdbcType=VARCHAR}
+        AND open > close
+        AND (open - close) / (high - low) > #{firstThreshold,jdbcType=DOUBLE}
+        ) AS first
+        JOIN (
+        -- 第二天 实体较小,跳空开盘,收盘价小于昨天收盘价
+        SELECT ts_code,
+        trade_date,
+        high,
+        low,
+        open,
+        close,
+        vol,
+        amount
+        FROM daily
+        WHERE
+        trade_date = #{secondDate,jdbcType=VARCHAR}
+        ) AS second ON first.ts_code = second.ts_code
+        JOIN (
+        SELECT ts_code,
+        symbol,
+        name,
+        industry
+        FROM stock_basic
+        WHERE market = '主板'
+        ) AS basic
+        ON first.ts_code = basic.ts_code
+        WHERE second.open &lt; first.low
+        AND second.close &lt; first.close
+        ORDER BY second.amount DESC
+    </select>
 </mapper>

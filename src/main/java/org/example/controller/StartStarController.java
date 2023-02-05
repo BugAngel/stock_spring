@@ -29,4 +29,15 @@ public class StartStarController {
             return new JsonResult<>(ReturnCode.FAIL, e.getLocalizedMessage());
         }
     }
+
+    @GetMapping("/pre_list")
+    public JsonResult<List<StartStarInfo>> preList(@RequestParam(value = "begin") Integer beginDate,
+                                                   @RequestParam(value = "end") Integer endDate,
+                                                   @RequestParam(value = "firstThreshold", defaultValue = "0.5") Double firstThreshold) {
+        try {
+            return new JsonResult<>(ReturnCode.SUC, startStarService.preList(beginDate, endDate, firstThreshold), "获取列表成功");
+        } catch (Exception e) {
+            return new JsonResult<>(ReturnCode.FAIL, e.getLocalizedMessage());
+        }
+    }
 }

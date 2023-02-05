@@ -9,4 +9,8 @@ public interface StartStarService {
                              Integer endDate,
                              Double firstThreshold,
                              Double thirdThreshold);
+
+    List<StartStarInfo> preList(Integer beginDate,
+                                Integer endDate,
+                                Double firstThreshold);
 }

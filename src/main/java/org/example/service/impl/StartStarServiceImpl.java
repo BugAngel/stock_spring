@@ -30,7 +30,7 @@ public class StartStarServiceImpl implements StartStarService {
         int begin = AlgorithmUtil.binarySearch(Constant.TRADE_DAYS, beginDate);
         int end = AlgorithmUtil.binarySearch(Constant.TRADE_DAYS, endDate);
 
-        for (int index = begin; index < end; index++) {
+        for (int index = begin; index <= end; index++) {
             String date = Constant.TRADE_DAYS.get(index).toString();
             String secondDay = Constant.TRADE_DAYS.get(index - 1).toString();
             String firstDay = Constant.TRADE_DAYS.get(index - 2).toString();
@@ -40,6 +40,34 @@ public class StartStarServiceImpl implements StartStarService {
             String next10Day = Constant.TRADE_DAYS.get(index + 10).toString();
             String next20Day = Constant.TRADE_DAYS.get(index + 20).toString();
             List<StockDailyBasic> StockDailyBasics = stockDailyBasicMapper.selectStartStarStock(firstDay, secondDay, date, firstThreshold, thirdThreshold);
+
+            for (StockDailyBasic stockDailyBasic : StockDailyBasics) {
+                String tsCode = stockDailyBasic.getTsCode();
+                StockQuality stockQuality = stockQualityMapper.selectStockQuality(tsCode, date, nextDay, next2Day, next5Day, next10Day, next20Day);
+                StartStarInfo startStarInfo = new StartStarInfo(stockDailyBasic, stockQuality);
+                startStarInfos.add(startStarInfo);
+            }
+        }
+        return startStarInfos;
+    }
+
+    @Override
+    public List<StartStarInfo> preList(Integer beginDate,
+                                       Integer endDate,
+                                       Double firstThreshold) {
+        List<StartStarInfo> startStarInfos = new ArrayList<>();
+        int begin = AlgorithmUtil.binarySearch(Constant.TRADE_DAYS, beginDate);
+        int end = AlgorithmUtil.binarySearch(Constant.TRADE_DAYS, endDate);
+
+        for (int index = begin; index <= end; index++) {
+            String date = Constant.TRADE_DAYS.get(index).toString();
+            String firstDay = Constant.TRADE_DAYS.get(index - 1).toString();
+            String nextDay = Constant.TRADE_DAYS.get(index + 1).toString();
+            String next2Day = Constant.TRADE_DAYS.get(index + 2).toString();
+            String next5Day = Constant.TRADE_DAYS.get(index + 5).toString();
+            String next10Day = Constant.TRADE_DAYS.get(index + 10).toString();
+            String next20Day = Constant.TRADE_DAYS.get(index + 20).toString();
+            List<StockDailyBasic> StockDailyBasics = stockDailyBasicMapper.selectPreStartStarStock(firstDay, date, firstThreshold);
 
             for (StockDailyBasic stockDailyBasic : StockDailyBasics) {
                 String tsCode = stockDailyBasic.getTsCode();
