@@ -1,12 +1,12 @@
 package org.example.dao;
 
 import java.util.List;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.example.entity.TradeCal;
 
-public interface TradeCalMapper {
+public interface TradeCalMapper extends BaseMapper<TradeCal> {
     int deleteByPrimaryKey(Integer id);
-
-    int insert(TradeCal record);
 
     TradeCal selectByPrimaryKey(Integer id);
 

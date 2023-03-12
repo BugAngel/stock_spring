@@ -1,5 +1,8 @@
 package org.example.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
+
+@TableName("trade_cal")
 public class TradeCal {
     private Integer id;
 

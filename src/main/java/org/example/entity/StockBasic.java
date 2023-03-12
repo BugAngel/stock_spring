@@ -1,5 +1,8 @@
 package org.example.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
+
+@TableName("stock_basic")
 public class StockBasic {
     private Integer id;
 

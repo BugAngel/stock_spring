@@ -1,5 +1,8 @@
 package org.example.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
+
+@TableName("hs_const")
 public class HsConst {
     private Integer id;
 

@@ -1,7 +1,10 @@
 package org.example.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.math.BigDecimal;
 
+@TableName("daily")
 public class Daily {
     private Integer id;
 

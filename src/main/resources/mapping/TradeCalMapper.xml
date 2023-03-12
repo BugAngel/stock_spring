@@ -12,12 +12,6 @@
     delete from trade_cal
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="org.example.entity.TradeCal" >
-    insert into trade_cal (id, exchange, cal_date, 
-      is_open, pretrade_date)
-    values (#{id,jdbcType=INTEGER}, #{exchange,jdbcType=VARCHAR}, #{calDate,jdbcType=VARCHAR}, 
-      #{isOpen,jdbcType=VARCHAR}, #{pretradeDate,jdbcType=VARCHAR})
-  </insert>
   <update id="updateByPrimaryKey" parameterType="org.example.entity.TradeCal" >
     update trade_cal
     set exchange = #{exchange,jdbcType=VARCHAR},
