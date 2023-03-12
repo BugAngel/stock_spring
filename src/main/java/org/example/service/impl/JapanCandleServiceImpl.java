@@ -6,7 +6,7 @@ import org.example.bean.StockDailyBasic;
 import org.example.bean.StockQuality;
 import org.example.dao.StockDailyBasicMapper;
 import org.example.dao.StockQualityMapper;
-import org.example.service.StartStarService;
+import org.example.service.JapanCandleService;
 import org.example.utils.AlgorithmUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,17 +15,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class StartStarServiceImpl implements StartStarService {
+public class JapanCandleServiceImpl implements JapanCandleService {
     @Autowired
     private StockDailyBasicMapper stockDailyBasicMapper;
     @Autowired
     private StockQualityMapper stockQualityMapper;
 
     @Override
-    public List<StartStarInfo> list(Integer beginDate,
-                                    Integer endDate,
-                                    Double firstThreshold,
-                                    Double thirdThreshold) {
+    public List<StartStarInfo> getStartStarList(Integer beginDate,
+                                                Integer endDate,
+                                                Double firstThreshold,
+                                                Double thirdThreshold) {
         List<StartStarInfo> startStarInfos = new ArrayList<>();
         int begin = AlgorithmUtil.binarySearch(Constant.TRADE_DAYS, beginDate);
         int end = AlgorithmUtil.binarySearch(Constant.TRADE_DAYS, endDate);
@@ -52,9 +52,9 @@ public class StartStarServiceImpl implements StartStarService {
     }
 
     @Override
-    public List<StartStarInfo> preList(Integer beginDate,
-                                       Integer endDate,
-                                       Double firstThreshold) {
+    public List<StartStarInfo> getPreStartStarList(Integer beginDate,
+                                                   Integer endDate,
+                                                   Double firstThreshold) {
         List<StartStarInfo> startStarInfos = new ArrayList<>();
         int begin = AlgorithmUtil.binarySearch(Constant.TRADE_DAYS, beginDate);
         int end = AlgorithmUtil.binarySearch(Constant.TRADE_DAYS, endDate);
@@ -77,5 +77,11 @@ public class StartStarServiceImpl implements StartStarService {
             }
         }
         return startStarInfos;
+    }
+
+    public List<StockDailyBasic> getHammerStockList(Integer beginDate,
+                                                    Integer endDate,
+                                                    Double threshold) {
+        return stockDailyBasicMapper.selectHammerStock(beginDate.toString(), endDate.toString(), threshold);
     }
 }

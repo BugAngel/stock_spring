@@ -2,14 +2,13 @@ package org.example.dao;
 
 import java.util.List;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.example.entity.Daily;
 
-public interface DailyMapper {
+public interface DailyMapper extends BaseMapper<Daily> {
     int deleteByPrimaryKey(Integer id);
-
-    int insert(Daily record);
 
     Daily selectByPrimaryKey(Integer id);
 
