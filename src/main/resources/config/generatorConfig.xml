@@ -54,5 +54,7 @@
 <!--        <table tableName="hs_const"/>-->
 <!--        <table tableName="stock_basic"/>-->
 <!--        <table tableName="trade_cal"/>-->
+<!--        <table tableName="five_avg"/>-->
+<!--        <table tableName="ten_avg"/>-->
     </context>
 </generatorConfiguration>

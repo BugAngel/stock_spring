@@ -5,17 +5,17 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-@TableName("trade_cal")
+import java.math.BigDecimal;
+
+@TableName("five_avg")
 @Data
-public class TradeCal {
+public class FiveAvg {
     @TableId(type = IdType.AUTO)
     private Integer id;
 
-    private String exchange;
+    private String tsCode;
 
-    private String calDate;
+    private Integer tradeDate;
 
-    private String isOpen;
-
-    private String pretradeDate;
+    private BigDecimal fiveAvgClose;
 }
