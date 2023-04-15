@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.example.dao.TwoYearHighMapper">
+    <resultMap id="BaseResultMap" type="org.example.bean.TwoYearHighBean">
+        <result column="trade_date" property="tradeDate" jdbcType="VARCHAR"/>
+        <result column="ts_code" property="tsCode" jdbcType="VARCHAR"/>
+        <result column="symbol" property="symbol" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="industry" property="industry" jdbcType="VARCHAR"/>
+        <result column="open" property="open" jdbcType="DECIMAL"/>
+        <result column="high" property="high" jdbcType="DECIMAL"/>
+        <result column="low" property="low" jdbcType="DECIMAL"/>
+        <result column="close" property="close" jdbcType="DECIMAL"/>
+        <result column="vol" property="vol" jdbcType="DECIMAL"/>
+        <result column="amount" property="amount" jdbcType="DECIMAL"/>
+        <result column="secondHighDate" property="secondHighDate" jdbcType="INTEGER"/>
+    </resultMap>
+    <select id="selectTwoYearHighStocks" resultMap="BaseResultMap">
+        SELECT  MAX(trade_date) AS trade_date
+        ,ts_code
+        ,MAX(symbol)     AS symbol
+        ,MAX(name)       AS name
+        ,MAX(industry)   AS industry
+        ,MAX(open)       AS open
+        ,MAX(high)       AS high
+        ,MAX(low)        AS low
+        ,MAX(close)      AS close
+        ,MAX(vol)        AS vol
+        ,MAX(amount)     AS amount
+        ,MIN(trade_date) AS second_high_date
+        FROM
+        (SELECT trade_date
+        ,ts_code
+        ,symbol
+        ,name
+        ,industry
+        ,open
+        ,high
+        ,low
+        ,close
+        ,vol
+        ,amount
+        FROM
+        (
+        SELECT  ts_code
+        ,trade_date
+        ,amount
+        ,open
+        ,high
+        ,low
+        ,close
+        ,vol
+        ,name
+        ,industry
+        ,symbol
+        ,rank() over(PARTITION BY ts_code ORDER BY close DESC) AS rank_num
+        FROM
+        (
+        SELECT  a.ts_code
+        ,a.trade_date
+        ,a.amount
+        ,a.open
+        ,a.high
+        ,a.low
+        ,a.close
+        ,a.vol
+        ,b.name
+        ,b.industry
+        ,b.symbol
+        FROM daily AS a
+        JOIN
+        (
+        SELECT  ts_code
+        ,name
+        ,industry
+        ,symbol
+        FROM stock_basic
+        WHERE market = '主板'
+        ) AS b
+        ON a.ts_code = b.ts_code
+        WHERE a.trade_date BETWEEN date_format(date_sub(#{date,jdbcType=VARCHAR}, interval 2 year),'%Y%m%d') AND #{date,jdbcType=VARCHAR}
+        ) AS a
+        ) AS a
+        WHERE a.rank_num IN (1, 2) -- 取历史最高和第二高
+        ) AS a
+        GROUP BY  ts_code
+        HAVING MAX(trade_date) = #{date,jdbcType=VARCHAR} -- 限制这一天的股票是近2年新高
+        ORDER BY second_high_date,amount DESC
+    </select>
+</mapper>
