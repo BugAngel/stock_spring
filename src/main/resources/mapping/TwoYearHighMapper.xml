@@ -13,7 +13,7 @@
         <result column="close" property="close" jdbcType="DECIMAL"/>
         <result column="vol" property="vol" jdbcType="DECIMAL"/>
         <result column="amount" property="amount" jdbcType="DECIMAL"/>
-        <result column="secondHighDate" property="secondHighDate" jdbcType="INTEGER"/>
+        <result column="second_high_date" property="secondHighDate" jdbcType="INTEGER"/>
     </resultMap>
     <select id="selectTwoYearHighStocks" resultMap="BaseResultMap">
         SELECT  MAX(trade_date) AS trade_date
