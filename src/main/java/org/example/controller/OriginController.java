@@ -52,4 +52,17 @@ public class OriginController {
             return new JsonResult<>(ReturnCode.FAIL, e.getLocalizedMessage());
         }
     }
+
+    /**
+     * 获取上证指数
+     * @return
+     */
+    @GetMapping("/sh_index")
+    public JsonResult<String> getShIndex() {
+        try {
+            return new JsonResult<>(ReturnCode.SUC, originService.getShIndex(), "success");
+        } catch (Exception e) {
+            return new JsonResult<>(ReturnCode.FAIL, e.getLocalizedMessage());
+        }
+    }
 }

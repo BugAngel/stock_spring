@@ -5,4 +5,5 @@ public interface OriginService {
     String getHsConst();
     String getStockBasic();
     String getTradeCal();
+    String getShIndex();
 }
