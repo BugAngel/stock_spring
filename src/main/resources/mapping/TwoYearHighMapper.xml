@@ -11,9 +11,11 @@
         <result column="high" property="high" jdbcType="DECIMAL"/>
         <result column="low" property="low" jdbcType="DECIMAL"/>
         <result column="close" property="close" jdbcType="DECIMAL"/>
+        <result column="pct_chg" property="pctChg" jdbcType="DECIMAL"/>
         <result column="vol" property="vol" jdbcType="DECIMAL"/>
         <result column="amount" property="amount" jdbcType="DECIMAL"/>
         <result column="second_high_date" property="secondHighDate" jdbcType="INTEGER"/>
+        <result column="second_high_close" property="secondHighClose" jdbcType="DECIMAL"/>
     </resultMap>
     <select id="selectTwoYearHighStocks" resultMap="BaseResultMap">
         SELECT  MAX(trade_date) AS trade_date
@@ -25,9 +27,11 @@
         ,MAX(high)       AS high
         ,MAX(low)        AS low
         ,MAX(close)      AS close
+        ,MAX(pct_chg)    AS pct_chg
         ,MAX(vol)        AS vol
         ,MAX(amount)     AS amount
         ,MIN(trade_date) AS second_high_date
+        ,MIN(close)     AS second_high_close
         FROM
         (SELECT trade_date
         ,ts_code
@@ -39,6 +43,7 @@
         ,low
         ,close
         ,vol
+        ,pct_chg
         ,amount
         FROM
         (
@@ -50,6 +55,7 @@
         ,low
         ,close
         ,vol
+        ,pct_chg
         ,name
         ,industry
         ,symbol
@@ -64,10 +70,11 @@
         ,a.low
         ,a.close
         ,a.vol
+        ,a.pct_chg
         ,b.name
         ,b.industry
         ,b.symbol
-        FROM daily AS a
+        FROM stock_hfq_daily AS a
         JOIN
         (
         SELECT  ts_code
@@ -86,5 +93,70 @@
         GROUP BY  ts_code
         HAVING MAX(trade_date) = #{date,jdbcType=VARCHAR} -- 限制这一天的股票是近2年新高
         ORDER BY second_high_date,amount DESC
+    </select>
+
+    <select id="selectNearTwoYearHighStocks" resultMap="BaseResultMap">
+        SELECT  a.ts_code
+        ,a.trade_date
+        ,a.amount
+        ,a.open
+        ,a.high
+        ,a.low
+        ,a.close
+        ,a.vol
+        ,a.pct_chg
+        ,a.name
+        ,a.industry
+        ,a.symbol
+        FROM
+        (
+        SELECT  a.ts_code
+        ,a.trade_date
+        ,a.amount
+        ,a.open
+        ,a.high
+        ,a.low
+        ,a.close
+        ,a.vol
+        ,a.pct_chg
+        ,b.name
+        ,b.industry
+        ,b.symbol
+        FROM stock_hfq_daily AS a
+        JOIN
+        (
+        SELECT  ts_code
+        ,name
+        ,industry
+        ,symbol
+        FROM stock_basic
+        WHERE market = '主板'
+        ) AS b
+        ON a.ts_code = b.ts_code
+        WHERE a.trade_date = #{date, jdbcType = VARCHAR}
+          AND a.close > a.pre_close
+        ) AS a
+        JOIN
+        (
+        SELECT  a.ts_code
+        ,MAX(a.close) AS max_close
+        FROM stock_hfq_daily AS a
+        JOIN
+        (
+        SELECT  ts_code
+        ,name
+        ,industry
+        ,symbol
+        FROM stock_basic
+        WHERE market = '主板'
+        ) AS b
+        ON a.ts_code = b.ts_code
+        WHERE a.trade_date BETWEEN date_format(date_sub(#{date, jdbcType = VARCHAR}, interval 2 year), '%Y%m%d') AND #{date, jdbcType = VARCHAR}
+        GROUP BY  a.ts_code
+        ) AS b
+        ON a.ts_code = b.ts_code
+        WHERE b.max_close &gt; a.close
+          AND (b.max_close-a.close)/a.close &lt;= #{threshold, jdbcType = DOUBLE}
+        ORDER BY a.amount DESC
     </select>
 </mapper>

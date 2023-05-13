@@ -26,6 +26,15 @@ public class OriginController {
         }
     }
 
+    @GetMapping("/get_hfq_daily")
+    public JsonResult<String> getHfqDaily() {
+        try {
+            return new JsonResult<>(ReturnCode.SUC, originService.getHfqDaily(), "success");
+        } catch (Exception e) {
+            return new JsonResult<>(ReturnCode.FAIL, e.getLocalizedMessage());
+        }
+    }
+
     @GetMapping("/hs_const")
     public JsonResult<String> getHsConst() {
         try {

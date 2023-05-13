@@ -17,7 +17,9 @@ public class TwoYearHighBean{
     private BigDecimal high;
     private BigDecimal low;
     private BigDecimal close;
+    private BigDecimal pctChg;
     private BigDecimal vol;
     private BigDecimal amount;
     private Integer secondHighDate;
+    private BigDecimal secondHighClose;
 }

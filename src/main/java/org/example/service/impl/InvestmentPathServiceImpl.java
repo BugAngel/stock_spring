@@ -23,4 +23,9 @@ public class InvestmentPathServiceImpl implements InvestmentPathService {
     public List<TwoYearHighBean> twoYearHighStocks(Integer date) {
         return twoYearHighMapper.selectTwoYearHighStocks(date);
     }
+
+    @Override
+    public List<TwoYearHighBean> nearTwoYearHighStocks(Integer date,Double threshold){
+        return twoYearHighMapper.selectNearTwoYearHighStocks(date,threshold);
+    }
 }

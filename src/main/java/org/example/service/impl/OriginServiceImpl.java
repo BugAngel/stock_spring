@@ -22,6 +22,11 @@ public class OriginServiceImpl implements OriginService {
     }
 
     @Override
+    public String getHfqDaily(){
+        return runProcess("E:\\Code\\stock\\venv\\Scripts\\python.exe E:\\Code\\stock\\origin\\get_stock_hfq_daily.py");
+    }
+
+    @Override
     public String getHsConst() {
         return runProcess("E:\\Code\\stock\\venv\\Scripts\\python.exe E:\\Code\\stock\\origin\\get_hs_const.py");
     }
@@ -62,7 +67,6 @@ public class OriginServiceImpl implements OriginService {
             for(JsonNode node : dataNode){
 
             }
-
         }catch (Exception e){
             log.error(e.getLocalizedMessage());
         }

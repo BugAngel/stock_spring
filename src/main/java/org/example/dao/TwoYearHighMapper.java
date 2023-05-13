@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface TwoYearHighMapper {
     List<TwoYearHighBean> selectTwoYearHighStocks(Integer date);
+
+    List<TwoYearHighBean> selectNearTwoYearHighStocks(Integer date,Double threshold);
 }

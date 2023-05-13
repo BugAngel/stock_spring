@@ -14,4 +14,6 @@ public interface InvestmentPathService {
      * @return 2年新高股票信息
      */
     List<TwoYearHighBean> twoYearHighStocks(Integer date);
+
+    List<TwoYearHighBean> nearTwoYearHighStocks(Integer date,Double threshold);
 }

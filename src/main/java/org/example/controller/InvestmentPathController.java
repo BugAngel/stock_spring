@@ -35,4 +35,14 @@ public class InvestmentPathController {
             return new JsonResult<>(ReturnCode.FAIL, e.getLocalizedMessage());
         }
     }
+
+    @GetMapping("/near_two_year_high")
+    public JsonResult<List<TwoYearHighBean>> nearTwoYearHighStocks(@RequestParam(value = "date") Integer date,
+                                                                   @RequestParam(value = "threshold") Double threshold) {
+        try {
+            return new JsonResult<>(ReturnCode.SUC, investmentPathService.nearTwoYearHighStocks(date,threshold), "获取列表成功");
+        } catch (Exception e) {
+            return new JsonResult<>(ReturnCode.FAIL, e.getLocalizedMessage());
+        }
+    }
 }
