@@ -25,6 +25,8 @@ public class IndexDaily {
 
     private BigDecimal close;
 
+    private BigDecimal changeNum;
+
     private BigDecimal pctChg;
 
     private BigDecimal vol;

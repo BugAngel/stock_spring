@@ -3,26 +3,37 @@ package org.example.service.impl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import lombok.extern.slf4j.Slf4j;
+import org.example.entity.IndexDaily;
+import org.example.service.IndexDailyService;
 import org.example.service.OriginService;
 import org.example.utils.HttpClientUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import static org.example.Constant.OBJECT_MAPPER;
 
 @Slf4j
 @Service
 public class OriginServiceImpl implements OriginService {
+    @Autowired
+    IndexDailyService indexDailyService;
+
     @Override
     public String getDaily() {
         return runProcess("E:\\Code\\stock\\venv\\Scripts\\python.exe E:\\Code\\stock\\origin\\get_daily.py");
     }
 
     @Override
-    public String getHfqDaily(){
+    public String getHfqDaily() {
         return runProcess("E:\\Code\\stock\\venv\\Scripts\\python.exe E:\\Code\\stock\\origin\\get_stock_hfq_daily.py");
     }
 
@@ -42,33 +53,35 @@ public class OriginServiceImpl implements OriginService {
     }
 
     @Override
-    public String getShIndex(){
+    public String getShIndex() {
         try {
-            String beginDate = "2021-01-01";
-            String endDate = "2023-05-07";
-            String url = "https://stockapi.com.cn/v1/index/sh?startDate="+beginDate+"&endDate="+endDate;
-            String data = HttpClientUtil.getHttpData(url);
-            JsonNode node = OBJECT_MAPPER.readTree(data).path("data");
-
-            return "success";
-        }catch (Exception e){
-            log.error(e.getLocalizedMessage());
-            return "error";
-        }
-    }
-
-    public static void main(String[] args) {
-        try {
-            String beginDate = "2023-05-04";
-            String endDate = "2023-05-07";
-            String url = "https://stockapi.com.cn/v1/index/sh?startDate="+beginDate+"&endDate="+endDate;
+            String beginDate = indexDailyService.getNextDate();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String endDate = simpleDateFormat.format(new Date());
+            String url = "https://stockapi.com.cn/v1/index/sh?startDate=" + beginDate + "&endDate=" + endDate;
             String data = HttpClientUtil.getHttpData(url);
             ArrayNode dataNode = (ArrayNode) OBJECT_MAPPER.readTree(data).path("data");
-            for(JsonNode node : dataNode){
-
+            List<IndexDaily> indexDailyList = new ArrayList<>();
+            for (JsonNode node : dataNode) {
+                IndexDaily indexDaily = new IndexDaily();
+                indexDaily.setTsCode(node.path("code").asText() + ".SH");
+                indexDaily.setTradeDate(node.path("time").asText().replace("-", ""));
+                indexDaily.setOpen(BigDecimal.valueOf(node.path("open").asDouble()));
+                indexDaily.setHigh(BigDecimal.valueOf(node.path("high").asDouble()));
+                indexDaily.setLow(BigDecimal.valueOf(node.path("low").asDouble()));
+                indexDaily.setClose(BigDecimal.valueOf(node.path("close").asDouble()));
+                indexDaily.setPctChg(BigDecimal.valueOf(node.path("changeRatio").asDouble()));
+                indexDaily.setVol(BigDecimal.valueOf(node.path("volume").asDouble()));
+                indexDaily.setAmount(BigDecimal.valueOf(node.path("amount").asDouble()));
+                indexDaily.setTurnOver(BigDecimal.valueOf(node.path("turnoverRatio").asDouble()));
+                indexDaily.setChangeNum(BigDecimal.valueOf(node.path("change").asDouble()));
+                indexDailyList.add(indexDaily);
             }
-        }catch (Exception e){
+            indexDailyService.saveBatch(indexDailyList);
+            return "success";
+        } catch (Exception e) {
             log.error(e.getLocalizedMessage());
+            return "error";
         }
     }
 

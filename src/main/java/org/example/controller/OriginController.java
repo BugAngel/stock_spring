@@ -62,10 +62,6 @@ public class OriginController {
         }
     }
 
-    /**
-     * 获取上证指数
-     * @return
-     */
     @GetMapping("/sh_index")
     public JsonResult<String> getShIndex() {
         try {
