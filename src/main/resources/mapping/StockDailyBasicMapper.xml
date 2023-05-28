@@ -13,6 +13,9 @@
         <result column="close" property="close" jdbcType="DECIMAL"/>
         <result column="vol" property="vol" jdbcType="DECIMAL"/>
         <result column="amount" property="amount" jdbcType="DECIMAL"/>
+        <result column="pre_close" property="preClose" jdbcType="DECIMAL"/>
+        <result column="change" property="change" jdbcType="DECIMAL"/>
+        <result column="pct_chg" property="pctChg" jdbcType="DECIMAL"/>
     </resultMap>
     <select id="selectStartStarStock" resultMap="BaseResultMap">
         SELECT third.trade_date,
@@ -69,7 +72,7 @@
         name,
         industry
         FROM stock_basic
-        WHERE market = '主板'
+        WHERE market IN ('主板','创业板')
         ) AS basic
         ON first.ts_code = basic.ts_code
         WHERE second.open &lt; first.low
@@ -124,7 +127,7 @@
         name,
         industry
         FROM stock_basic
-        WHERE market = '主板'
+        WHERE market IN ('主板','创业板')
         ) AS basic
         ON first.ts_code = basic.ts_code
         WHERE second.open &lt; first.low
@@ -167,7 +170,7 @@
         ,industry
         ,symbol
         FROM stock_basic
-        WHERE market = '主板'
+        WHERE market IN ('主板','创业板')
         ) AS b
         ON a.ts_code = b.ts_code
         ORDER BY a.amount DESC
@@ -208,9 +211,95 @@
         ,industry
         ,symbol
         FROM stock_basic
-        WHERE market = '主板'
+        WHERE market IN ('主板','创业板')
         ) AS b
         ON a.ts_code = b.ts_code
         ORDER BY a.amount DESC
+    </select>
+
+    <select id="selectStockDailyInfo" resultMap="BaseResultMap">
+        SELECT a.trade_date,
+               a.ts_code,
+               b.symbol,
+               b.name,
+               b.industry,
+               a.open,
+               a.high,
+               a.low,
+               a.close,
+               a.vol,
+               a.amount,
+               a.pre_close,
+               a.change,
+               a.pct_chg
+          FROM (
+             SELECT *
+               FROM daily
+              WHERE trade_date BETWEEN #{begin_date,jdbcType=VARCHAR} AND #{end_date,jdbcType=VARCHAR}
+              <if test="ts_code != null and ts_code != ''">
+                  AND ts_code = #{ts_code,jdbcType=VARCHAR}
+              </if>
+          ) AS a
+         INNER JOIN (
+        SELECT  ts_code
+               ,name
+               ,industry
+               ,symbol
+               FROM stock_basic
+               WHERE market IN ('主板','创业板')
+        <if test="name != null and name != ''">
+            AND name = #{name,jdbcType=VARCHAR}
+        </if>
+        <if test="industry != null and industry != ''">
+            AND industry = #{industry,jdbcType=VARCHAR}
+        </if>
+          ) AS b
+        ON a.ts_code = b.ts_code
+        ORDER BY a.trade_date DESC,
+                 a.ts_code DESC,
+                 a.amount DESC
+    </select>
+
+    <select id="selectStockHfqDailyInfo" resultMap="BaseResultMap">
+        SELECT a.trade_date,
+        a.ts_code,
+        b.symbol,
+        b.name,
+        b.industry,
+        a.open,
+        a.high,
+        a.low,
+        a.close,
+        a.vol,
+        a.amount,
+        a.pre_close,
+        a.change,
+        a.pct_chg
+        FROM (
+        SELECT *
+        FROM stock_hfq_daily
+        WHERE trade_date BETWEEN #{begin_date,jdbcType=VARCHAR} AND #{end_date,jdbcType=VARCHAR}
+        <if test="ts_code != null and ts_code != ''">
+            AND ts_code = #{ts_code,jdbcType=VARCHAR}
+        </if>
+        ) AS a
+        INNER JOIN (
+        SELECT  ts_code
+        ,name
+        ,industry
+        ,symbol
+        FROM stock_basic
+        WHERE market IN ('主板','创业板')
+        <if test="name != null and name != ''">
+            AND name = #{name,jdbcType=VARCHAR}
+        </if>
+        <if test="industry != null and industry != ''">
+            AND industry = #{industry,jdbcType=VARCHAR}
+        </if>
+        ) AS b
+        ON a.ts_code = b.ts_code
+        ORDER BY a.trade_date DESC,
+        a.ts_code DESC,
+        a.amount DESC
     </select>
 </mapper>

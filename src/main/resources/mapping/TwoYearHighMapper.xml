@@ -74,7 +74,7 @@
         ,b.name
         ,b.industry
         ,b.symbol
-        FROM stock_hfq_daily AS a
+        FROM daily AS a
         JOIN
         (
         SELECT  ts_code
@@ -122,7 +122,7 @@
         ,b.name
         ,b.industry
         ,b.symbol
-        FROM stock_hfq_daily AS a
+        FROM daily AS a
         JOIN
         (
         SELECT  ts_code
@@ -130,7 +130,7 @@
         ,industry
         ,symbol
         FROM stock_basic
-        WHERE market = '主板'
+        WHERE market IN ('主板','创业板')
         ) AS b
         ON a.ts_code = b.ts_code
         WHERE a.trade_date = #{date, jdbcType = VARCHAR}
@@ -140,7 +140,7 @@
         (
         SELECT  a.ts_code
         ,MAX(a.close) AS max_close
-        FROM stock_hfq_daily AS a
+        FROM daily AS a
         JOIN
         (
         SELECT  ts_code
@@ -148,7 +148,7 @@
         ,industry
         ,symbol
         FROM stock_basic
-        WHERE market = '主板'
+        WHERE market IN ('主板','创业板')
         ) AS b
         ON a.ts_code = b.ts_code
         WHERE a.trade_date BETWEEN date_format(date_sub(#{date, jdbcType = VARCHAR}, interval 2 year), '%Y%m%d') AND #{date, jdbcType = VARCHAR}

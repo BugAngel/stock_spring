@@ -22,4 +22,16 @@ public interface StockDailyBasicMapper extends BaseMapper<StockDailyBasic> {
                                             @Param("threshold") Double threshold);
 
     List<StockDailyBasic> selectStockDailyBasicFromDailyIds(@Param("ids") List<Integer> ids);
+
+    List<StockDailyBasic> selectStockDailyInfo(@Param("begin_date") String beginDate,
+                                               @Param("end_date") String endDate,
+                                               @Param("ts_code") String tsCode,
+                                               @Param("name") String name,
+                                               @Param("industry") String industry);
+
+    List<StockDailyBasic> selectStockHfqDailyInfo(@Param("begin_date") String beginDate,
+                                                  @Param("end_date") String endDate,
+                                                  @Param("ts_code") String tsCode,
+                                                  @Param("name") String name,
+                                                  @Param("industry") String industry);
 }

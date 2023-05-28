@@ -19,4 +19,7 @@ public class StockDailyBasic {
     private BigDecimal close;
     private BigDecimal vol;
     private BigDecimal amount;
+    private BigDecimal preClose;
+    private BigDecimal change;
+    private BigDecimal pctChg;
 }
