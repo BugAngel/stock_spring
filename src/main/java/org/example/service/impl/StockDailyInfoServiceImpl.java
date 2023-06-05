@@ -19,9 +19,10 @@ public class StockDailyInfoServiceImpl implements StockDailyInfoService {
     public List<StockDailyBasic> getStockDailyInfo(String beginDate,
                                                    String endDate,
                                                    String tsCode,
+                                                   String symbol,
                                                    String name,
                                                    String industry) {
-        return stockDailyBasicMapper.selectStockDailyInfo(beginDate, endDate, tsCode, name, industry);
+        return stockDailyBasicMapper.selectStockDailyInfo(beginDate, endDate, tsCode, symbol, name, industry);
     }
 
     @Override

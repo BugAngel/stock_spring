@@ -8,6 +8,7 @@ public interface StockDailyInfoService {
     List<StockDailyBasic> getStockDailyInfo(String beginDate,
                                             String endDate,
                                             String tsCode,
+                                            String symbol,
                                             String name,
                                             String industry);
 

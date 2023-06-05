@@ -253,6 +253,9 @@
         <if test="industry != null and industry != ''">
             AND industry = #{industry,jdbcType=VARCHAR}
         </if>
+        <if test="symbol != null and symbol != ''">
+            AND symbol = #{symbol,jdbcType=VARCHAR}
+        </if>
           ) AS b
         ON a.ts_code = b.ts_code
         ORDER BY a.trade_date DESC,

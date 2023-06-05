@@ -7,6 +7,8 @@ import org.example.service.IndexDailyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class IndexDailyServiceImpl extends ServiceImpl<IndexDailyMapper, IndexDaily> implements IndexDailyService {
     @Autowired
@@ -14,5 +16,9 @@ public class IndexDailyServiceImpl extends ServiceImpl<IndexDailyMapper, IndexDa
 
     public String getNextDate(){
         return indexDailyMapper.getNextDate();
+    }
+
+    public List<IndexDaily> getShByTradeDate(String beginDate, String endDate){
+        return indexDailyMapper.selectShByTradeDate(beginDate, endDate);
     }
 }
