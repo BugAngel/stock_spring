@@ -17,6 +17,7 @@
         <result column="change" property="change" jdbcType="DECIMAL"/>
         <result column="pct_chg" property="pctChg" jdbcType="DECIMAL"/>
     </resultMap>
+
     <select id="selectStartStarStock" resultMap="BaseResultMap">
         SELECT third.trade_date,
         first.ts_code,
@@ -304,5 +305,135 @@
         ORDER BY a.trade_date DESC,
         a.ts_code DESC,
         a.amount DESC
+    </select>
+
+    <select id="selectTwoYearHighStocks" resultMap="BaseResultMap">
+        SELECT  trade_date,
+        ts_code,
+        amount,
+        open,
+        high,
+        low,
+        close,
+        vol,
+        pct_chg,
+        pre_close,
+        name,
+        industry,
+        symbol
+        FROM (
+        SELECT
+        trade_date,
+        ts_code,
+        amount,
+        open,
+        high,
+        low,
+        close,
+        vol,
+        pct_chg,
+        pre_close,
+        name,
+        industry,
+        symbol,
+        rank() over(PARTITION BY ts_code ORDER BY close DESC) AS rank_num
+        FROM (
+        SELECT
+        a.ts_code,
+        a.trade_date,
+        a.amount,
+        a.open,
+        a.high,
+        a.low,
+        a.close,
+        a.vol,
+        a.pct_chg,
+        a.pre_close,
+        b.name,
+        b.industry,
+        b.symbol
+        FROM daily AS a
+        JOIN (
+        SELECT
+        ts_code,
+        name,
+        industry,
+        symbol
+        FROM stock_basic
+        WHERE
+        market IN ('主板', '创业板')
+        ) AS b ON a.ts_code = b.ts_code
+        WHERE
+        a.trade_date BETWEEN date_format(date_sub(#{date,jdbcType=VARCHAR}, interval 2 year),'%Y%m%d') AND #{date,jdbcType=VARCHAR}
+        ) AS a
+        ) AS a
+        WHERE a.rank_num = 1
+          AND a.trade_date = #{date,jdbcType=VARCHAR}
+        ORDER BY amount DESC
+    </select>
+
+    <select id="selectNearTwoYearHighStocks" resultMap="BaseResultMap">
+        SELECT  a.ts_code
+        ,a.trade_date
+        ,a.amount
+        ,a.open
+        ,a.high
+        ,a.low
+        ,a.close
+        ,a.vol
+        ,a.pct_chg
+        ,a.name
+        ,a.industry
+        ,a.symbol
+        FROM
+        (
+        SELECT  a.ts_code
+        ,a.trade_date
+        ,a.amount
+        ,a.open
+        ,a.high
+        ,a.low
+        ,a.close
+        ,a.vol
+        ,a.pct_chg
+        ,b.name
+        ,b.industry
+        ,b.symbol
+        FROM daily AS a
+        JOIN
+        (
+        SELECT  ts_code
+        ,name
+        ,industry
+        ,symbol
+        FROM stock_basic
+        WHERE market IN ('主板','创业板')
+        ) AS b
+        ON a.ts_code = b.ts_code
+        WHERE a.trade_date = #{date, jdbcType = VARCHAR}
+        AND a.close > a.pre_close
+        ) AS a
+        JOIN
+        (
+        SELECT  a.ts_code
+        ,MAX(a.close) AS max_close
+        FROM daily AS a
+        JOIN
+        (
+        SELECT  ts_code
+        ,name
+        ,industry
+        ,symbol
+        FROM stock_basic
+        WHERE market IN ('主板','创业板')
+        ) AS b
+        ON a.ts_code = b.ts_code
+        WHERE a.trade_date BETWEEN date_format(date_sub(#{date, jdbcType = VARCHAR}, interval 2 year), '%Y%m%d') AND #{date, jdbcType = VARCHAR}
+        GROUP BY  a.ts_code
+        ) AS b
+        ON a.ts_code = b.ts_code
+        WHERE b.max_close &gt; a.close
+        AND (b.max_close-a.close)/a.close &lt;= #{threshold, jdbcType = DOUBLE}
+        ORDER BY a.amount DESC
     </select>
 </mapper>

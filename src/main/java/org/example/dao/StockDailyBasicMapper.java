@@ -2,7 +2,6 @@ package org.example.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 import org.example.bean.StockDailyBasic;
 
 import java.util.List;
@@ -36,4 +35,8 @@ public interface StockDailyBasicMapper extends BaseMapper<StockDailyBasic> {
                                                   @Param("ts_code") String tsCode,
                                                   @Param("name") String name,
                                                   @Param("industry") String industry);
+
+    List<StockDailyBasic> selectTwoYearHighStocks(Integer date);
+
+    List<StockDailyBasic> selectNearTwoYearHighStocks(Integer date,Double threshold);
 }

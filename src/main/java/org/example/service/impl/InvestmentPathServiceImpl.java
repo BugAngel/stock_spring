@@ -1,7 +1,7 @@
 package org.example.service.impl;
 
-import org.example.bean.TwoYearHighBean;
-import org.example.dao.TwoYearHighMapper;
+import org.example.bean.StockDailyBasic;
+import org.example.dao.StockDailyBasicMapper;
 import org.example.service.InvestmentPathService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 public class InvestmentPathServiceImpl implements InvestmentPathService {
     @Autowired
-    private TwoYearHighMapper twoYearHighMapper;
+    private StockDailyBasicMapper stockDailyBasicMapper;
 
     /**
      * 2年新高股票
@@ -20,12 +20,12 @@ public class InvestmentPathServiceImpl implements InvestmentPathService {
      * @return 2年新高股票信息
      */
     @Override
-    public List<TwoYearHighBean> twoYearHighStocks(Integer date) {
-        return twoYearHighMapper.selectTwoYearHighStocks(date);
+    public List<StockDailyBasic> twoYearHighStocks(Integer date) {
+        return stockDailyBasicMapper.selectTwoYearHighStocks(date);
     }
 
     @Override
-    public List<TwoYearHighBean> nearTwoYearHighStocks(Integer date,Double threshold){
-        return twoYearHighMapper.selectNearTwoYearHighStocks(date,threshold);
+    public List<StockDailyBasic> nearTwoYearHighStocks(Integer date,Double threshold){
+        return stockDailyBasicMapper.selectNearTwoYearHighStocks(date,threshold);
     }
 }

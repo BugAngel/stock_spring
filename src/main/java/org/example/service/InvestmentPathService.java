@@ -1,6 +1,6 @@
 package org.example.service;
 
-import org.example.bean.TwoYearHighBean;
+import org.example.bean.StockDailyBasic;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public interface InvestmentPathService {
      * @param date 日期
      * @return 2年新高股票信息
      */
-    List<TwoYearHighBean> twoYearHighStocks(Integer date);
+    List<StockDailyBasic> twoYearHighStocks(Integer date);
 
-    List<TwoYearHighBean> nearTwoYearHighStocks(Integer date,Double threshold);
+    List<StockDailyBasic> nearTwoYearHighStocks(Integer date,Double threshold);
 }
