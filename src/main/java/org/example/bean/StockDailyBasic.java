@@ -13,6 +13,7 @@ public class StockDailyBasic {
     private String symbol;
     private String name;
     private String industry;
+    private String market;
     private BigDecimal open;
     private BigDecimal high;
     private BigDecimal low;

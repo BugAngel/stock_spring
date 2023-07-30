@@ -1,5 +1,6 @@
 package org.example.utils;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,23 @@ public class AlgorithmUtil {
         }
         return end;
     }
+
+    /**
+     * 归一化，把最大值归为100
+     *
+     * @param data 原始数组
+     * @return 归一化后的数组
+     */
+    public static double[] normalization(double[] data) {
+        double max = Arrays.stream(data).max().getAsDouble();
+        double ratio = 100 / max;
+        double[] res = new double[data.length];
+        for (int i = 0; i < data.length; i++) {
+            res[i] = data[i] * ratio;
+        }
+        return res;
+    }
+
 
     /**
      * 最小二乘法拟合直线的斜率

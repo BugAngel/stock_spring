@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static org.example.utils.AlgorithmUtil.normalization;
+
 @Service
 @Slf4j
 public class EntanglementTheoryServiceImpl implements EntanglementTheoryService {
@@ -52,7 +54,7 @@ public class EntanglementTheoryServiceImpl implements EntanglementTheoryService 
             if ((max - now) / max >= callback) {
                 // 2. 筛选符合斜率要求的股票
                 LinkedList<Daily> callBackStockList = stockDailyMap.get(tsCode);
-                double k = AlgorithmUtil.linerRegressionSlope(StockUtil.stockDailyClose2Double(callBackStockList));
+                double k = AlgorithmUtil.linerRegressionSlope(normalization(StockUtil.stockDailyClose2Double(callBackStockList)));
                 if (k >= minSlope && k <= maxSlope) {
                     // 筛选完成
                     dailyIds.add(stockDailyMap.get(tsCode).getLast().getId());
